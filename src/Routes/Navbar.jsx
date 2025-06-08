@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { use } from 'react';
 import { Link, NavLink } from 'react-router';
+import { AuthContext } from './Pages/Authentication/AuthContext';
 
 const Navbar = () => {
+  const {user} = use(AuthContext)
     const links = <>
     <li className=''><NavLink to='/'>Home</NavLink></li>
     <li className=''><NavLink to='allPackages'>All Packages</NavLink></li>
@@ -32,8 +34,15 @@ const Navbar = () => {
       }
     </ul>
   </div>
-  <div className="navbar-end flex gap-5">
-   <div>
+
+  {
+    user ? (
+      // <div>
+      //   <button>Logout</button>
+      //   </div>
+
+      <div>
+        <div>
    <button className='btn btn-primary'>
      <Link to='login'>Login</Link>
    </button>
@@ -43,8 +52,16 @@ const Navbar = () => {
         <Link to='register'>Register</Link>
     </button>
    </div>
-   <div></div>
-  </div>
+      </div>
+    ) : 
+    (
+  
+  <div>
+         <Link to='login'><button className='btn-secondary btn'>Logout</button></Link>
+        </div>
+    )
+  }
+  
 </div>
     );
 };

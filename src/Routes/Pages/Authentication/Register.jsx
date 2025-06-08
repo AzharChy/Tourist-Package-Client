@@ -1,6 +1,17 @@
-import React from 'react';
+import {  useContext } from "react";
+
+import { useNavigate } from "react-router";
+import { AuthContext } from "./AuthContext";
+import Swal from "sweetalert2";
+import axios from "axios";
+
 
 const Register = () => {
+  const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+
+  // handling registration button
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -11,7 +22,47 @@ const Register = () => {
 
     console.log({ name, email, password, photoUrl });
 
-    // You can now pass this data to Firebase or your backend API
+    createUser(email,password)
+    .then((result)=>{
+      const user = result.user;
+      console.log(user)
+      const userProfile = {
+        userId: user.userId,
+        name, 
+        email, 
+        photoUrl
+      } ;
+      // return fetch('http://localhost:3000/user',{
+      //   method: 'POST',
+      //   headers: {
+      //     'content-type' : 'application/json'
+      //   },
+      //   body: JSON.stringify(userProfile)
+      // });
+
+      return axios.post('http://localhost:3000/user',userProfile,{
+        headers:{
+           'Content-Type': 'application/json'
+        }
+      })
+    })
+      .then((res) => res.json())
+    .then((data) => {
+      console.log('User saved to DB:', data);
+      Swal.fire("Registration Successfull!");
+      navigate('/')
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.message || 'Something went wrong during registration.',
+      });
+    });
+    
+
+    
   };
 
   return (
