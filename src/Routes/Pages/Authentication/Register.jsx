@@ -32,15 +32,9 @@ const Register = () => {
         email, 
         photoUrl
       } ;
-      // return fetch('http://localhost:3000/user',{
-      //   method: 'POST',
-      //   headers: {
-      //     'content-type' : 'application/json'
-      //   },
-      //   body: JSON.stringify(userProfile)
-      // });
+    
 
-      return axios.post('http://localhost:3000/user',userProfile,{
+      return axios.post('http://localhost:3000/users',userProfile,{
         headers:{
            'Content-Type': 'application/json'
         }

@@ -1,69 +1,79 @@
-import React, { use } from 'react';
-import { Link, NavLink } from 'react-router';
+import React, { use, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from './Pages/Authentication/AuthContext';
+import Swal from 'sweetalert2';
 
 const Navbar = () => {
-  const {user} = use(AuthContext)
-    const links = <>
-    <li className=''><NavLink to='/'>Home</NavLink></li>
-    <li className=''><NavLink to='allPackages'>All Packages</NavLink></li>
-    <li className=''><NavLink to='myBookings'>My bookings</NavLink></li>
-    <li className=''><NavLink to='aboutUs'>About US</NavLink></li>
-    </>
-    return (
-       <div className="navbar bg-base-100 shadow-sm">
-  <div className="navbar-start">
-    <div className="dropdown">
-      <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
-      </div>
-      <ul
-        tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        {
-            links
-        }
-      </ul>
-    </div>
-    <a className="btn btn-ghost text-xl">daisyUI</a>
-  </div>
-  <div className="navbar-center hidden lg:flex">
-    <ul className="menu menu-horizontal px-1">
-      {
-        links
-      }
-    </ul>
-  </div>
+  const { user, logout } = use(AuthContext);
+  const [dbUser, setDbUser] = useState(null);
+  const navigate = useNavigate();
 
-  {
-    user ? (
-      // <div>
-      //   <button>Logout</button>
-      //   </div>
-
-      <div>
-        <div>
-   <button className='btn btn-primary'>
-     <Link to='login'>Login</Link>
-   </button>
-   </div>
-   <div>
-    <button className='btn btn-primary'>
-        <Link to='register'>Register</Link>
-    </button>
-   </div>
-      </div>
-    ) : 
-    (
-  
-  <div>
-         <Link to='login'><button className='btn-secondary btn'>Logout</button></Link>
-        </div>
-    )
+  const handleLogout = () =>{
+    logout()
+    .then(()=>{
+      Swal.fire("Logout Successfull!");
+       navigate('/login')
+    })
+    .catch((error)=>{
+      alert('something is wrong!!',error)
+    })
   }
-  
-</div>
-    );
+
+  const links = (
+    <>
+      <li><NavLink to='/'>Home</NavLink></li>
+      <li><NavLink to='/allPackages'>All Packages</NavLink></li>
+      <li><NavLink to='/myBookings'>My Bookings</NavLink></li>
+      <li><NavLink to='/aboutUs'>About Us</NavLink></li>
+    </>
+  );
+
+  return (
+    <div className="navbar bg-base-100 shadow-sm">
+      {/* Navbar Start (Logo + Mobile Dropdown) */}
+      <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+            </svg>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
+          >
+            {links}
+          </ul>
+        </div>
+        <a className="btn btn-ghost text-xl">daisyUI</a>
+      </div>
+
+      {/* Navbar Center (Navigation Links) */}
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">
+          {links}
+        </ul>
+      </div>
+
+      {/* Navbar End (Auth Buttons) */}
+      <div className="navbar-end">
+        {user ? (
+          <Link to='login'>
+            <button onClick={handleLogout} className='btn btn-secondary'>Logout</button>
+          </Link>
+        ) : (
+          <div className='flex gap-2'>
+            <Link to='login'>
+              <button className='btn btn-primary'>Login</button>
+            </Link>
+            <Link to='register'>
+              <button className='btn btn-primary'>Register</button>
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Navbar;

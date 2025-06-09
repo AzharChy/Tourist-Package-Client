@@ -9,6 +9,7 @@ import MyBookings from "./Pages/MyBookings";
 import AboutUs from "./Pages/AboutUs";
 import Login from "./Pages/Authentication/Login";
 import Register from "./Pages/Authentication/Register";
+import PrivateRoute from "./Pages/Authentication/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -21,16 +22,28 @@ export const router = createBrowserRouter([
     },
     {
       path: 'allPackages',
-      element: <AllPackages></AllPackages>
+      element:(
+        <PrivateRoute>
+           <AllPackages></AllPackages>
+        </PrivateRoute>
+      )
     },
     {
       path: 'myBookings',
-      element: <MyBookings></MyBookings>
+      element: (
+        <PrivateRoute>
+          <MyBookings></MyBookings>
+        </PrivateRoute>
+      )
     }
     ,
   {
     path: 'aboutUs',
-    element: <AboutUs></AboutUs>
+    element: (
+      <PrivateRoute>
+        <AboutUs></AboutUs>
+      </PrivateRoute>
+    )
   },
   {
     path: 'login',
