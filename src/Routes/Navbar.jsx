@@ -1,12 +1,25 @@
-import React, { use, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from './Pages/Authentication/AuthContext';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const Navbar = () => {
   const { user, logout } = use(AuthContext);
   const [dbUser, setDbUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    if (user?.email){
+      axios.get(`http://localhost:3000/users/${user.email}`)
+    .then((res)=> {
+      setDbUser(res.data);
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+    }
+  },[user])
 
   const handleLogout = () =>{
     logout()
@@ -55,23 +68,43 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* Navbar End (Auth Buttons) */}
-      <div className="navbar-end">
-        {user ? (
-          <Link to='login'>
-            <button onClick={handleLogout} className='btn btn-secondary'>Logout</button>
-          </Link>
-        ) : (
-          <div className='flex gap-2'>
-            <Link to='login'>
-              <button className='btn btn-primary'>Login</button>
-            </Link>
-            <Link to='register'>
-              <button className='btn btn-primary'>Register</button>
-            </Link>
+     {/* Navbar End (Auth Buttons) */}
+<div className="navbar-end">
+  {user ? (
+    <div className="flex items-center gap-4">
+      {/* Logout Button */}
+      <Link to="/login">
+        <button onClick={handleLogout} className="btn btn-secondary">
+          Logout
+        </button>
+      </Link>
+
+      {/* User Avatar with Tooltip */}
+      {dbUser && (
+        <div className="relative group">
+          <img
+            src={dbUser.photoUrl}
+            alt="User"
+            className="w-10 h-10 rounded-full"
+          />
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-gray-800 text-white text-sm px-3 py-1 rounded shadow-lg z-10">
+            {dbUser.name}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="flex gap-2">
+      <Link to="/login">
+        <button className="btn btn-primary">Login</button>
+      </Link>
+      <Link to="/register">
+        <button className="btn btn-primary">Register</button>
+      </Link>
+    </div>
+  )}
+</div>
+
     </div>
   );
 };
