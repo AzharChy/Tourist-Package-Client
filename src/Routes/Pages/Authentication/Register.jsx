@@ -13,38 +13,44 @@ const Register = () => {
 
   // handling registration button
   const handleRegister = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    const photoUrl = form.photoUrl.value;
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const password = form.password.value;
+  const photoUrl = form.photoUrl.value;
 
-    console.log({ name, email, password, photoUrl });
-
-    createUser(email,password)
-    .then((result)=>{
+  createUser(email, password)
+    .then((result) => {
       const user = result.user;
-      console.log(user)
-      const userProfile = {
-        userId: user.userId,
-        name, 
-        email, 
-        photoUrl
-      } ;
-    
+      return user.getIdToken().then((idToken) => {
+        // Get JWT token from backend
+        return axios.post('http://localhost:3000/jwt', { email }, {
+          headers: {
+            Authorization: `Bearer ${idToken}`
+          }
+        });
+      }).then((res) => {
+        localStorage.setItem('accessToken', res.data.token);
 
-      return axios.post('http://localhost:3000/users',userProfile,{
-        headers:{
-           'Content-Type': 'application/json'
-        }
-      })
+        // Now save user profile to DB
+        const userProfile = {
+          userId: user.uid,
+          name,
+          email,
+          photoUrl,
+        };
+        return axios.post('http://localhost:3000/users', userProfile, {
+          headers: { 'Content-Type': 'application/json',
+            Authorization: `Bearer ${res.data.token}`
+           }
+        });
+      });
     })
-      .then((res) => res.json())
-    .then((data) => {
-      console.log('User saved to DB:', data);
-      Swal.fire("Registration Successfull!");
-      navigate('/')
+    .then((res) => {
+      console.log('User saved to DB:', res.data);
+      Swal.fire("Registration Successful!");
+      navigate('/');
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -54,14 +60,12 @@ const Register = () => {
         text: error.message || 'Something went wrong during registration.',
       });
     });
-    
+};
 
-    
-  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="min-consoleh-screen flex items-center justify-center bg-blue-500 px-4">
+      <div className="w-full max-w-md bg-white text-black p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
         <form onSubmit={handleRegister} className="space-y-4">
           <div>

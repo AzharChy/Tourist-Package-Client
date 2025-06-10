@@ -11,7 +11,12 @@ const Navbar = () => {
 
   useEffect(()=>{
     if (user?.email){
-      axios.get(`http://localhost:3000/users/${user.email}`)
+      const token = localStorage.getItem('tourist-site-token');
+      axios.get(`http://localhost:3000/users/${user.email}`,{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
     .then((res)=> {
       setDbUser(res.data);
     })

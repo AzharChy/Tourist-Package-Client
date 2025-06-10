@@ -44,6 +44,11 @@ const AuthProvider = ({ children }) => {
      if (currentUser) {
   const firebaseToken = await currentUser.getIdToken();
 
+  if (!firebaseToken) {
+    console.error("No Firebase token. Skipping JWT request.");
+    return;
+  }
+
   try {
     const response = await fetch('http://localhost:3000/jwt', {
       method: 'POST',

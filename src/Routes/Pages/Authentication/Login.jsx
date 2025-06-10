@@ -1,35 +1,59 @@
-import React, { use } from 'react';
+import React, { use, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const Login = () => {
-  const {login, loginWithGoogle} = use(AuthContext);
+  const {loginUser, loginWithGoogle} = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogin = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.email.value;
-    const password = form.password.value;
+  e.preventDefault();
+  const form = e.target;
+  const email = form.email.value;
+  const password = form.password.value;
 
-    login(email,password)
-    .then((result)=>{
-        const user = result.user;
-        Swal.fire("Login successfully done!");
-        navigate(`${location.state ? location.state : '/'
-        }`)
+  loginUser(email, password)
+    .then((result) => {
+      const user = result.user;
+
+      // ✅ Get Firebase ID token
+      user.getIdToken()
+        .then((idToken) => {
+          // ✅ Send it to backend to get your JWT
+          axios.post('http://localhost:3000/jwt', { firebaseToken: idToken  }, {
+            headers: {
+              Authorization: `Bearer ${idToken}` // ✅ FIXED typo
+            }
+          })
+          .then((res) => {
+            // ✅ Save token and navigate only after success
+            localStorage.setItem('accessToken', res.data.token);
+            Swal.fire("Login successfully done!");
+            navigate(location.state ? location.state : '/');
+          })
+          .catch((err) => {
+            console.error("JWT error:", err);
+            Swal.fire({
+              icon: 'warning',
+              title: 'Login successful, but token failed',
+              text: err.message || 'Failed to retrieve access token.'
+            });
+          });
+        })
+        .catch((err) => {
+          console.error("getIdToken error:", err);
+        });
     })
-    .catch((error)=>{
-       Swal.fire({
+    .catch((error) => {
+      Swal.fire({
         icon: 'error',
         title: 'Login Failed',
         text: error.message || 'Something went wrong during login.',
       });
-    })
-    
+    });
+};
 
-    
-  };
   const handleGoogleSignIn = () =>{
   loginWithGoogle()
   .then((result) =>{
@@ -47,8 +71,8 @@ const Login = () => {
 }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-blue-600 px-4">
+      <div className="w-full max-w-md bg-blue-600 p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
