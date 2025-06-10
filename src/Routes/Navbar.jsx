@@ -9,26 +9,25 @@ const Navbar = () => {
   const [dbUser, setDbUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if (user?.email){
-      const token = localStorage.getItem('tourist-site-token');
-      axios.get(`http://localhost:3000/users/${user.email}`,{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
+   useEffect(() => {
+    if (user?.email) {
+      axios.get(`http://localhost:3000/users/${user.email}`, {
+        withCredentials: true
       })
-    .then((res)=> {
-      setDbUser(res.data);
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
+      .then(res => {
+        setDbUser(res.data);
+      })
+      .catch(err => {
+        console.error('User fetch error:', err);
+      });
     }
-  },[user])
+  }, [user]);
 
   const handleLogout = () =>{
     logout()
+    
     .then(()=>{
+        
       Swal.fire("Logout Successfull!");
        navigate('/login')
     })
@@ -41,7 +40,9 @@ const Navbar = () => {
     <>
       <li><NavLink to='/'>Home</NavLink></li>
       <li><NavLink to='/allPackages'>All Packages</NavLink></li>
+      {user && (
       <li><NavLink to='/myBookings'>My Bookings</NavLink></li>
+    )}
       <li><NavLink to='/aboutUs'>About Us</NavLink></li>
     </>
   );
@@ -83,6 +84,7 @@ const Navbar = () => {
           Logout
         </button>
       </Link>
+      
 
       {/* User Avatar with Tooltip */}
       {dbUser && (

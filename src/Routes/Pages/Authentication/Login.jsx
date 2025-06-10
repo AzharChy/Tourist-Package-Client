@@ -7,68 +7,57 @@ import axios from 'axios';
 const Login = () => {
   const {loginUser, loginWithGoogle} = useContext(AuthContext);
   const navigate = useNavigate();
-  const handleLogin = (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const email = form.email.value;
-  const password = form.password.value;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
 
-  loginUser(email, password)
-    .then((result) => {
-      const user = result.user;
+    try {
+      const result = await loginUser(email, password);
+      const firebaseUser = result.user;
+      const idToken = await firebaseUser.getIdToken();
 
-      // ✅ Get Firebase ID token
-      user.getIdToken()
-        .then((idToken) => {
-          // ✅ Send it to backend to get your JWT
-          axios.post('http://localhost:3000/jwt', { firebaseToken: idToken  }, {
-            headers: {
-              Authorization: `Bearer ${idToken}` // ✅ FIXED typo
-            }
-          })
-          .then((res) => {
-            // ✅ Save token and navigate only after success
-            localStorage.setItem('accessToken', res.data.token);
-            Swal.fire("Login successfully done!");
-            navigate(location.state ? location.state : '/');
-          })
-          .catch((err) => {
-            console.error("JWT error:", err);
-            Swal.fire({
-              icon: 'warning',
-              title: 'Login successful, but token failed',
-              text: err.message || 'Failed to retrieve access token.'
-            });
-          });
-        })
-        .catch((err) => {
-          console.error("getIdToken error:", err);
-        });
-    })
-    .catch((error) => {
+      await axios.post('http://localhost:3000/jwt', { firebaseToken: idToken }, {
+        withCredentials: true // ✅ Automatically sets cookie
+      });
+
+      Swal.fire("Login successfully done!");
+      navigate(location.state?.from || '/');
+
+    } catch (error) {
+      console.error("Login error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.message || 'Something went wrong.',
+      });
+    }
+  };
+    
+
+   const handleGoogleSignIn = async () => {
+    try {
+      const result = await loginWithGoogle();
+      const googleUser = result.user;
+      const idToken = await googleUser.getIdToken();
+
+      // ✅ Send Google user's token to backend to set JWT cookie
+      await axios.post('http://localhost:3000/jwt', { firebaseToken: idToken }, {
+        withCredentials: true,
+      });
+
+      Swal.fire("Login successfully done!");
+      navigate(location.state?.from || '/');
+    } catch (error) {
+      console.error("Google Login error:", error);
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
         text: error.message || 'Something went wrong during login.',
       });
-    });
-};
-
-  const handleGoogleSignIn = () =>{
-  loginWithGoogle()
-  .then((result) =>{
-    const googleUser = result.user;
-      Swal.fire("Login successfully done!");
-        navigate(`${location.state ? location.state : "/"}`);
-  })
-  .catch((error)=>{
-   Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: error.message || 'Something went wrong during login.',
-      });
-  })
-}
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-600 px-4">

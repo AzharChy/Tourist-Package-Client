@@ -41,39 +41,30 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
       setLoading(false);
 
-     if (currentUser) {
-  const firebaseToken = await currentUser.getIdToken();
+      if (currentUser) {
+        const firebaseToken = await currentUser.getIdToken();
 
-  if (!firebaseToken) {
-    console.error("No Firebase token. Skipping JWT request.");
-    return;
-  }
+        try {
+          await fetch('http://localhost:3000/jwt', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ firebaseToken }),
+            credentials: 'include' // 👈 ensure cookie is set properly
+          });
 
-  try {
-    const response = await fetch('http://localhost:3000/jwt', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ firebaseToken }),
-    });
-
-    const data = await response.json();
-
-    if (data.token) {
-      localStorage.setItem('tourist-site-token', data.token);
-      console.log('JWT saved to localStorage:', data.token);
-    } else {
-      console.error('No token in response');
-    }
-
-  } catch (error) {
-    console.error('Error getting JWT from backend:', error);
-  }
-} else {
-  localStorage.removeItem('tourist-site-token');
-}
-
+          console.log("JWT cookie set by backend ✅");
+        } catch (error) {
+          console.error('Error setting JWT cookie:', error);
+        }
+      } else {
+        // You can optionally call a backend route to clear the cookie on logout
+        await fetch('http://localhost:3000/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+      }
     });
 
     return unSubscribe;

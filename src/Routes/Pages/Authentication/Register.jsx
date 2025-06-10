@@ -10,61 +10,61 @@ const Register = () => {
   const { createUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-
-  // handling registration button
   const handleRegister = (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const name = form.name.value;
-  const email = form.email.value;
-  const password = form.password.value;
-  const photoUrl = form.photoUrl.value;
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const photoUrl = form.photoUrl.value;
 
-  createUser(email, password)
-    .then((result) => {
-      const user = result.user;
-      return user.getIdToken().then((idToken) => {
-        // Get JWT token from backend
-        return axios.post('http://localhost:3000/jwt', { email }, {
-          headers: {
-            Authorization: `Bearer ${idToken}`
-          }
+    createUser(email, password)
+      .then((result) => {
+        const user = result.user;
+        return user.getIdToken().then((idToken) => {
+          // Send token to backend to set cookie
+          return axios.post(
+            'http://localhost:3000/jwt',
+            { firebaseToken: idToken },
+            { withCredentials: true } // Important: send cookies!
+          ).then(() => user); // Pass user forward
         });
-      }).then((res) => {
-        localStorage.setItem('accessToken', res.data.token);
-
-        // Now save user profile to DB
+      })
+      .then((user) => {
+        // Save user to DB
         const userProfile = {
           userId: user.uid,
           name,
           email,
           photoUrl,
         };
-        return axios.post('http://localhost:3000/users', userProfile, {
-          headers: { 'Content-Type': 'application/json',
-            Authorization: `Bearer ${res.data.token}`
-           }
+
+        return axios.post(
+          'http://localhost:3000/users',
+          userProfile,
+          {
+            withCredentials: true, // send cookie along again
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      })
+      .then((res) => {
+        console.log('User saved to DB:', res.data);
+        Swal.fire("Registration Successful!");
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: error.message || 'Something went wrong during registration.',
         });
       });
-    })
-    .then((res) => {
-      console.log('User saved to DB:', res.data);
-      Swal.fire("Registration Successful!");
-      navigate('/');
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Registration Failed',
-        text: error.message || 'Something went wrong during registration.',
-      });
-    });
-};
-
+  };
 
   return (
-    <div className="min-consoleh-screen flex items-center justify-center bg-blue-500 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-blue-500 px-4">
       <div className="w-full max-w-md bg-white text-black p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
         <form onSubmit={handleRegister} className="space-y-4">
