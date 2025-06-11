@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from './Pages/Authentication/AuthContext';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import { GiDetour } from "react-icons/gi";
 
 const Navbar = () => {
   const { user, logout } = use(AuthContext);
@@ -62,9 +63,32 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
           >
             {links}
+            <li className='block md:hidden mt-2'>
+              {
+                user && dbUser && (
+                   <div className=" relative group">
+          <img
+            src={dbUser.photoUrl}
+            alt="User"
+            className="w-10 h-10 rounded-full"
+          />
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-gray-800 text-white text-sm px-3 py-1 rounded shadow-lg z-10">
+            {dbUser.name}
+          </div>
+        </div>
+                )
+              }
+            </li>
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+       <div className='flex gap-1 items-center justify-center'>
+        <div className='text-2xl'>
+          <GiDetour />
+        </div>
+        <div>
+           <a className="btn btn-ghost text-xl">Your Guide</a>
+        </div>
+       </div>
       </div>
 
       {/* Navbar Center (Navigation Links) */}
@@ -77,7 +101,7 @@ const Navbar = () => {
      {/* Navbar End (Auth Buttons) */}
 <div className="navbar-end">
   {user ? (
-    <div className="flex items-center gap-4">
+    <div className="flex  items-center gap-4">
       {/* Logout Button */}
       <Link to="/login">
         <button onClick={handleLogout} className="btn btn-secondary">
@@ -88,7 +112,7 @@ const Navbar = () => {
 
       {/* User Avatar with Tooltip */}
       {dbUser && (
-        <div className="relative group">
+        <div className="hidden md:block relative group">
           <img
             src={dbUser.photoUrl}
             alt="User"

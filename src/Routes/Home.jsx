@@ -1,9 +1,10 @@
 import React from 'react';
+import ThemeToggle from '../ThemeToggle/Themetoggle';
 
 const Home = () => {
     return (
         <div>
-           This is Home 
+           <ThemeToggle></ThemeToggle>
         </div>
     );
 };
