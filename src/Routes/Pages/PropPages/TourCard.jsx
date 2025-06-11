@@ -37,7 +37,7 @@ const TourCard = ({ tour }) => {
           <p><span className="poppins-semibold">Departure Date:</span> {departureDate}</p>
           <p><span className="poppins-semibold">Price:</span> ৳{price}</p>
            <div className="  p-2 rounded text-center">
-          {guideName ? (
+          {guideEmail ? (
             <>
               <img
                 src={guidePhoto}
