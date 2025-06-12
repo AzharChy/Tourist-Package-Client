@@ -44,7 +44,9 @@ const Navbar = () => {
       {user && (
       <li><NavLink to='/myBookings'>My Bookings</NavLink></li>
     )}
-    <li><NavLink to='addTourPackage'>Add Tour Package</NavLink></li>
+   {user && (
+     <li><NavLink to='addTourPackage'>Add Tour Package</NavLink></li>
+   )}
       <li><NavLink to='/aboutUs'>About Us</NavLink></li>
     </>
   );

@@ -3,6 +3,7 @@ import ThemeToggle from '../ThemeToggle/Themetoggle';
 import bannerImage from '../assets/bannere.jpg'
 import { Link } from 'react-router';
 import FeaturedPackages from './FeaturedPackages';
+import FlyAir from '../Homepage Component/FlyAir';
 
 const Home = () => {
   return (
@@ -32,8 +33,13 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Featured Packages Section */}
+      <div>
+        {/* Featured Packages Section */}
       <FeaturedPackages />
+        </div>
+        <div>
+          <FlyAir></FlyAir>
+        </div>
     </div>
   );
 };
