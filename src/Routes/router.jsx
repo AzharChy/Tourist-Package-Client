@@ -65,7 +65,15 @@ export const router = createBrowserRouter([
   },
   {
     path: 'allPackages/package/:_id',
-    element: <TourDetails></TourDetails>
+    element: <TourDetails></TourDetails>,
+     loader: async ({ params }) => {
+    const res = await fetch(`http://localhost:3000/addedTourPackages/${params._id}`);
+    if (!res.ok) {
+      throw new Response("Failed to fetch tour", { status: res.status });
+    }
+    return res.json();
+  },
+  errorElement:<ErrorPage></ErrorPage>
 
   },
   {
