@@ -4,6 +4,7 @@ import bannerImage from '../assets/bannere.jpg'
 import { Link } from 'react-router';
 import FeaturedPackages from './FeaturedPackages';
 import FlyAir from '../Homepage Component/FlyAir';
+import RaikTicket from '../Homepage Component/RaikTicket';
 
 const Home = () => {
   return (
@@ -39,6 +40,9 @@ const Home = () => {
         </div>
         <div>
           <FlyAir></FlyAir>
+        </div>
+        <div>
+          <RaikTicket></RaikTicket>
         </div>
     </div>
   );

@@ -13,6 +13,7 @@ import PrivateRoute from "./Pages/Authentication/PrivateRoute";
 import ErrorPage from "./Pages/ErrorPage";
 import AddTourPackage from "./Pages/AddTourPackage";
 import BimanTicket from "../Homepage Component/BimanTicket";
+import TourDetails from "../TourDetails/TourDetails";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,11 @@ export const router = createBrowserRouter([
   {
     path: 'register',
     element: <Register></Register>
+  },
+  {
+    path: 'allPackages/package/:_id',
+    element: <TourDetails></TourDetails>
+
   },
   {
     path: '*',

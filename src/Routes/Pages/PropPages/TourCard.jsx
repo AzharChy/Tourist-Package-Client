@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { use } from 'react';
+import { Link } from 'react-router';
+import { AuthContext } from '../Authentication/AuthContext';
 
 const TourCard = ({ tour }) => {
+  const {user} = use(AuthContext);
   const {
     tourName,
     image,
@@ -29,7 +32,7 @@ const TourCard = ({ tour }) => {
       </div>
 
       {/* Right Side Info */}
-      <div className="md:w-1/2 w-full p-10 flex flex-col justify-between">
+      <div className="md:w-1/2 w-full p-10 flex flex-col justify-between bg-blue-300">
         <div>
           <h2 className="text-2xl poppins-bold text-gray-800 mb-2">{tourName}</h2>
           <p><span className="poppins-semibold">Duration:</span> {duration}</p>
@@ -56,9 +59,20 @@ const TourCard = ({ tour }) => {
 
         {/* View Details Button */}
         <div className="mt-4">
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
+          {user ?  (
+            <Link to={`package/${tour._id}`}>
+              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
             View Details
           </button>
+            </Link>
+          )
+            :
+            <Link to='/login'>
+              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
+            View Details
+          </button>
+            </Link>
+          }
         </div>
       </div>
     </div>
