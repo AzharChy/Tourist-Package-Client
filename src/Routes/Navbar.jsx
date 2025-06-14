@@ -52,7 +52,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-blue-300 shadow-sm">
       {/* Navbar Start (Logo + Mobile Dropdown) */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -66,7 +66,7 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
           >
             {links}
-            <li className='block md:hidden mt-2'>
+            <li className='block md:hidden mt-2 poppins-semibold'>
               {
                 user && dbUser && (
                    <div className=" relative group">
@@ -89,13 +89,13 @@ const Navbar = () => {
           <GiDetour />
         </div>
         <div>
-           <a className="btn btn-ghost text-xl">Your Guide</a>
+           <a className="btn btn-ghost text-xl poppins-extrabold text-white">Your Guide</a>
         </div>
        </div>
       </div>
 
       {/* Navbar Center (Navigation Links) */}
-      <div className="navbar-center hidden lg:flex">
+      <div className="navbar-center hidden lg:flex poppins-semibold text-white">
         <ul className="menu menu-horizontal px-1">
           {links}
         </ul>

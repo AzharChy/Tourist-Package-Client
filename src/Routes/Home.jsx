@@ -15,7 +15,7 @@ const Home = () => {
       </div>
 
       {/* Banner Section */}
-      <div className="hero bg-orange-200 py-10">
+      <div className="hero bg-blue-300 py-10">
         <div className="hero-content flex-col lg:flex-row gap-10">
           <img
             src={bannerImage}
