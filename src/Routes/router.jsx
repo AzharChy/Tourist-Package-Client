@@ -14,6 +14,7 @@ import ErrorPage from "./Pages/ErrorPage";
 import AddTourPackage from "./Pages/AddTourPackage";
 import BimanTicket from "../Homepage Component/BimanTicket";
 import TourDetails from "../TourDetails/TourDetails";
+import MyPackages from "./Pages/MyPackages";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,12 @@ export const router = createBrowserRouter([
       path: 'addTourPackage',
       element: <PrivateRoute>
         <AddTourPackage></AddTourPackage>
+      </PrivateRoute>
+    },
+    {
+      path: 'myPackages',
+      element: <PrivateRoute>
+        <MyPackages></MyPackages>
       </PrivateRoute>
     }
     ,

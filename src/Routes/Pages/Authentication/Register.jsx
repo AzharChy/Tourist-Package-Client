@@ -2,6 +2,8 @@ import {  useContext } from "react";
 
 import { useNavigate } from "react-router";
 import { AuthContext } from "./AuthContext";
+import { updateProfile } from "firebase/auth";
+
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -19,48 +21,58 @@ const Register = () => {
     const photoUrl = form.photoUrl.value;
 
     createUser(email, password)
-      .then((result) => {
-        const user = result.user;
-        return user.getIdToken().then((idToken) => {
-          // Send token to backend to set cookie
-          return axios.post(
-            'http://localhost:3000/jwt',
-            { firebaseToken: idToken },
-            { withCredentials: true } // Important: send cookies!
-          ).then(() => user); // Pass user forward
-        });
-      })
-      .then((user) => {
-        // Save user to DB
-        const userProfile = {
-          userId: user.uid,
-          name,
-          email,
-          photoUrl,
-        };
+  .then((result) => {
+    const user = result.user;
 
-        return axios.post(
-          'http://localhost:3000/users',
-          userProfile,
-          {
-            withCredentials: true, // send cookie along again
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-      })
-      .then((res) => {
-        console.log('User saved to DB:', res.data);
-        Swal.fire("Registration Successful!");
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: error.message || 'Something went wrong during registration.',
-        });
-      });
+    // ✅ Update profile in Firebase
+    return updateProfile(user, {
+      displayName: name,
+      photoURL: photoUrl
+    }).then(() => user); // return updated user
+  })
+  .then((user) => {
+    // ✅ Get Firebase ID token
+    return user.getIdToken().then((idToken) => {
+      // Send token to backend to set cookie
+      return axios.post(
+        'http://localhost:3000/jwt',
+        { firebaseToken: idToken },
+        { withCredentials: true }
+      ).then(() => user);
+    });
+  })
+  .then((user) => {
+    // ✅ Save user to database
+    const userProfile = {
+      userId: user.uid,
+      name,
+      email,
+      photoUrl,
+    };
+
+    return axios.post(
+      'http://localhost:3000/users',
+      userProfile,
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  })
+  .then((res) => {
+    console.log('User saved to DB:', res.data);
+    Swal.fire("Registration Successful!");
+    navigate('/');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Registration Failed',
+      text: error.message || 'Something went wrong during registration.',
+    });
+  });
+
   };
 
   return (

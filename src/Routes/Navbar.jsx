@@ -47,6 +47,9 @@ const Navbar = () => {
    {user && (
      <li><NavLink to='addTourPackage'>Add Tour Package</NavLink></li>
    )}
+   {user && (
+     <li><NavLink to='myPackages'>My Packages</NavLink></li>
+   )}
       <li><NavLink to='/aboutUs'>About Us</NavLink></li>
     </>
   );
