@@ -45,7 +45,7 @@ const handleChange = (e) => {
     };
 
     try{
-       await axios.post('http://localhost:3000/addedTourPackages',packageData,{
+       await axios.post('https://tour-server-drab.vercel.app/addedTourPackages',packageData,{
           withCredentials: true,
        });
           Swal.fire("Tour package added successfully!");

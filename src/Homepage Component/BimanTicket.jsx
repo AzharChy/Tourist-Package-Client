@@ -22,10 +22,10 @@ const BimanTicket = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevents the default form submission behavior (page reload)
     
-    console.log('Form Submitted with data:', formData);
+    // console.log('Form Submitted with data:', formData);
 
     // Send the form data to the server when the form is submitted
-    axios.post('http://localhost:3000/airlines', formData)
+    axios.post('https://tour-server-drab.vercel.app/airlines', formData)
       .then((res) => {
         console.log('Server response:', res.data);
         alert(`Form submitted successfully!`);

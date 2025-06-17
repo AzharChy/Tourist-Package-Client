@@ -74,7 +74,7 @@ export const router = createBrowserRouter([
     path: 'allPackages/package/:_id',
     element: <TourDetails></TourDetails>,
      loader: async ({ params }) => {
-    const res = await fetch(`http://localhost:3000/addedTourPackages/${params._id}`);
+    const res = await fetch(`https://tour-server-drab.vercel.app/addedTourPackages/${params._id}`);
     if (!res.ok) {
       throw new Response("Failed to fetch tour", { status: res.status });
     }

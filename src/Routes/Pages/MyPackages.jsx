@@ -14,7 +14,7 @@ const MyPackages = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get("http://localhost:3000/addedTourPackages", {
+        .get("https://tour-server-drab.vercel.app/addedTourPackages", {
           withCredentials: true,
         })
         .then((res) => {
@@ -40,7 +40,7 @@ const MyPackages = () => {
   }).then((result) => {
     if (result.isConfirmed) {
       axios
-        .delete(`http://localhost:3000/addedTourPackages/${id}`, {
+        .delete(`https://tour-server-drab.vercel.app/addedTourPackages/${id}`, {
           withCredentials: true,
         })
         .then((res) => {
@@ -151,7 +151,7 @@ const MyPackages = () => {
           closeModal={() => setSelectedTour(null)}
           refresh={() => {
             axios
-              .get("http://localhost:3000/addedTourPackages", {
+              .get("https://tour-server-drab.vercel.app/addedTourPackages", {
                 withCredentials: true,
               })
               .then((res) => {

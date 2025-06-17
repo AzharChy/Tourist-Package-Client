@@ -18,7 +18,7 @@ const Login = () => {
       const firebaseUser = result.user;
       const idToken = await firebaseUser.getIdToken();
 
-      await axios.post('http://localhost:3000/jwt', { firebaseToken: idToken }, {
+      await axios.post('https://tour-server-drab.vercel.app/jwt', { firebaseToken: idToken }, {
         withCredentials: true // ✅ Automatically sets cookie
       });
 
@@ -43,7 +43,7 @@ const Login = () => {
       const idToken = await googleUser.getIdToken();
 
       // ✅ Send Google user's token to backend to set JWT cookie
-      await axios.post('http://localhost:3000/jwt', { firebaseToken: idToken }, {
+      await axios.post('https://tour-server-drab.vercel.app/jwt', { firebaseToken: idToken }, {
         withCredentials: true,
       });
 

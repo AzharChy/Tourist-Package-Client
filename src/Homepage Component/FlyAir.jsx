@@ -12,7 +12,7 @@ const FlyAir = () => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/airlines')
+        axios.get('https://tour-server-drab.vercel.app/airlines')
             .then((res) => {
                 setAirlines(res.data);
             })

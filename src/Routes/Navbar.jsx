@@ -12,7 +12,7 @@ const Navbar = () => {
 
    useEffect(() => {
     if (user?.email) {
-      axios.get(`http://localhost:3000/users/${user.email}`, {
+      axios.get(`https://tour-server-drab.vercel.app/users/${user.email}`, {
         withCredentials: true
       })
       .then(res => {

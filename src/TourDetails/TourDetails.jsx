@@ -35,8 +35,8 @@ contactNo
     };
 
    try {
-  await axios.post('http://localhost:3000/bookings', booking, { withCredentials: true });
-  await axios.patch(`http://localhost:3000/addedTourPackages/${tour._id}/incrementBooking`);
+  await axios.post('https://tour-server-drab.vercel.app/bookings', booking, { withCredentials: true });
+  await axios.patch(`https://tour-server-drab.vercel.app/addedTourPackages/${tour._id}/incrementBooking`);
 
   Swal.fire('Success!', 'Tour booked successfully.', 'success');
   setShowModal(false);

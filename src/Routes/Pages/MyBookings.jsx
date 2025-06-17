@@ -19,7 +19,7 @@ const MyBookings = () => {
 
   const fetchBookings = () => {
     setLoading(true);
-    axios.get('http://localhost:3000/bookings', { withCredentials: true })
+    axios.get('https://tour-server-drab.vercel.app/bookings', { withCredentials: true })
       .then(res => {
         const uniqueBookings = removeDuplicates(res.data);
         setBookings(uniqueBookings);
@@ -46,7 +46,7 @@ const MyBookings = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(`http://localhost:3000/booking/${bookingId}`, {
+          const response = await axios.delete(`https://tour-server-drab.vercel.app/booking/${bookingId}`, {
             withCredentials: true,
           });
 
@@ -68,7 +68,7 @@ const MyBookings = () => {
 
   const handleConfirm = async (bookingId) => {
   try {
-    const res = await axios.patch(`http://localhost:3000/booking/${bookingId}/confirm`, {}, {
+    const res = await axios.patch(`https://tour-server-drab.vercel.app/booking/${bookingId}/confirm`, {}, {
       withCredentials: true
     });
 

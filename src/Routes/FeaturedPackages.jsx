@@ -4,14 +4,14 @@ import { AuthContext } from './Pages/Authentication/AuthContext';
 import { Link } from 'react-router';
 
 const FeaturedPackages = () => {
-  // Use useContext instead of the experimental `use`
+
   const { user } = use(AuthContext); 
   const [packages, setPackages] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/addedTourPackages')
+    axios.get('https://tour-server-drab.vercel.app/addedTourPackages')
       .then((res) => {
-        // Only take the first 6 packages
+        // Only takes the first 6 packages
         setPackages(res.data.slice(0, 6));
       })
       .catch((err) => console.error(err));

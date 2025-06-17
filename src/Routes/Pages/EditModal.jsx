@@ -21,7 +21,7 @@ const EditModal = ({ tour, closeModal, refresh }) => {
     e.preventDefault();
     try {
       await axios.patch(
-        `http://localhost:3000/addedTourPackages/${tour._id}`,
+        `https://tour-server-drab.vercel.app/addedTourPackages/${tour._id}`,
         formData,
         { withCredentials: true }
       );

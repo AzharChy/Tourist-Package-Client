@@ -45,22 +45,22 @@ const AuthProvider = ({ children }) => {
         const firebaseToken = await currentUser.getIdToken();
 
         try {
-          await fetch('http://localhost:3000/jwt', {
+          await fetch('https://tour-server-drab.vercel.app/jwt', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({ firebaseToken }),
-            credentials: 'include' // 👈 ensure cookie is set properly
+            credentials: 'include' 
           });
 
-          console.log("JWT cookie set by backend ✅");
+          console.log("JWT cookie set by backend ");
         } catch (error) {
           console.error('Error setting JWT cookie:', error);
         }
       } else {
-        // You can optionally call a backend route to clear the cookie on logout
-        await fetch('http://localhost:3000/logout', {
+        
+        await fetch('https://tour-server-drab.vercel.app/logout', {
           method: 'POST',
           credentials: 'include'
         });

@@ -12,70 +12,76 @@ const Register = () => {
   const { createUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    const photoUrl = form.photoUrl.value;
+ const handleRegister = (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const email = form.email.value;
+  const password = form.password.value;
+  const photoUrl = form.photoUrl.value;
 
-    createUser(email, password)
-  .then((result) => {
-    const user = result.user;
+  // ✅ Password validation
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-    // ✅ Update profile in Firebase
-    return updateProfile(user, {
-      displayName: name,
-      photoURL: photoUrl
-    }).then(() => user); // return updated user
-  })
-  .then((user) => {
-    // ✅ Get Firebase ID token
-    return user.getIdToken().then((idToken) => {
-      // Send token to backend to set cookie
-      return axios.post(
-        'http://localhost:3000/jwt',
-        { firebaseToken: idToken },
-        { withCredentials: true }
-      ).then(() => user);
-    });
-  })
-  .then((user) => {
-    // ✅ Save user to database
-    const userProfile = {
-      userId: user.uid,
-      name,
-      email,
-      photoUrl,
-    };
-
-    return axios.post(
-      'http://localhost:3000/users',
-      userProfile,
-      {
-        withCredentials: true,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-  })
-  .then((res) => {
-    console.log('User saved to DB:', res.data);
-    Swal.fire("Registration Successful!").then(() => {
-  setTimeout(() => navigate('/'), 2000); // small delay for auth state update
-});;
-    navigate('/');
-  })
-  .catch((error) => {
-    console.error('Error:', error);
+  if (!passwordRegex.test(password)) {
     Swal.fire({
-      icon: 'error',
-      title: 'Registration Failed',
-      text: error.message || 'Something went wrong during registration.',
+      icon: 'warning',
+      title: 'Weak Password',
+      text: 'Password must be at least 6 characters long, include an uppercase letter and a special character.',
     });
-  });
+    return;
+  }
 
-  };
+  createUser(email, password)
+    .then((result) => {
+      const user = result.user;
+      return updateProfile(user, {
+        displayName: name,
+        photoURL: photoUrl,
+      }).then(() => user);
+    })
+    .then((user) => {
+      return user.getIdToken().then((idToken) => {
+        return axios.post(
+          'https://tour-server-drab.vercel.app/jwt',
+          { firebaseToken: idToken },
+          { withCredentials: true }
+        ).then(() => user);
+      });
+    })
+    .then((user) => {
+      const userProfile = {
+        userId: user.uid,
+        name,
+        email,
+        photoUrl,
+      };
+
+      return axios.post(
+        'https://tour-server-drab.vercel.app/users',
+        userProfile,
+        {
+          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    })
+    .then((res) => {
+      console.log('User saved to DB:', res.data);
+      Swal.fire("Registration Successful!").then(() => {
+        navigate('/');
+      });
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.message || 'Something went wrong during registration.',
+      });
+    });
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-500 px-4">

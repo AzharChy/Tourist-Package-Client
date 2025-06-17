@@ -5,13 +5,13 @@ import TourCard from './PropPages/TourCArd';
 const AllPackages = () => {
     const [packages, setPackages] = useState([]);
     const [search, setSearch] = useState([]);
-
+       
 
 
     useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/addedTourPackages?search=${search}`, {
+        const res = await axios.get(`https://tour-server-drab.vercel.app/addedTourPackages?search=${search}`, {
           withCredentials: true
         });
         setPackages(res.data);
