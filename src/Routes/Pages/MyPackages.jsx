@@ -27,30 +27,123 @@ const MyPackages = () => {
     }
   }
   , [user]);
+
+  const handleDelete = (id) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This package will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios
+        .delete(`http://localhost:3000/addedTourPackages/${id}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          // Check for deletion success (prefer deletedCount or status)
+          if (res.data.deletedCount > 0 || res.status === 200) {
+            Swal.fire("Deleted!", "Tour has been deleted.", "success");
+
+            // Update UI by filtering out the deleted tour
+            setMyTours((prevTours) => prevTours.filter((tour) => tour._id !== id));
+
+            // If modal was open for deleted tour, close it
+            if (selectedTour?._id === id) {
+              setSelectedTour(null);
+            }
+          } else {
+            Swal.fire("Error!", "Failed to delete the tour.", "error");
+          }
+        })
+        .catch(() => {
+          Swal.fire("Error!", "Something went wrong.", "error");
+        });
+    }
+  });
+};
+
   if (loading) return <div className="text-center py-10">Loading...</div>;
 
   return (
    <div className="p-6 max-w-5xl mx-auto space-y-4">
       <h2 className="text-2xl font-semibold text-center">My Packages</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {myTours.map((tour) => (
-          <div key={tour._id} className="bg-blue-200 p-4 rounded-lg shadow-md space-y-2">
-            <img src={tour.image} alt={tour.tourName} className="rounded-md w-full h-40 object-cover" />
-            <h3 className="text-xl font-bold">{tour.tourName}</h3>
-            <p><strong>Destination:</strong> {tour.destination}</p>
-            <p><strong>Price:</strong> ${tour.price}</p>
-            <p><strong>Duration:</strong> {tour.duration}</p>
-            <p><strong>Departure Date:</strong> {tour.departureDate || "N/A"}</p>
-            <p><strong>Booking Count:</strong> {tour.bookingCount || 0}</p>
-            <button
-              onClick={() => setSelectedTour(tour)}
-              className="flex items-center mx-auto gap-1 text-blue-600 hover:underline"
-            >
-              Edit Details <CiEdit />
-            </button>
-          </div>
+    {myTours.length > 0 ? (
+  <div className="overflow-x-auto">
+    <table className="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Tour Info</th>
+          <th>Details</th>
+          <th>Booking Count</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {myTours.map((tour, index) => (
+          <tr key={tour._id}>
+            <th>{index + 1}</th>
+            <td>
+              <div className="flex items-center gap-3">
+                <div className="avatar">
+                  <div className="mask mask-squircle w-12 h-12">
+                    <img src={tour.image} alt={tour.tourName} />
+                  </div>
+                </div>
+                <div>
+                  <div className="font-bold">{tour.tourName}</div>
+                  <div className="text-sm opacity-50">{tour.destination}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              ${tour.price}
+              <br />
+              <span className="badge badge-ghost badge-sm">
+                {tour.duration} | {tour.departureDate || "N/A"}
+              </span>
+            </td>
+            <td>{tour.bookingCount || 0}</td>
+            <th>
+              <button
+                onClick={() => setSelectedTour(tour)}
+                className="btn btn-sm btn-outline btn-primary mr-2"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(tour._id)}
+                className="btn btn-sm btn-outline btn-error"
+              >
+                Delete
+              </button>
+            </th>
+          </tr>
         ))}
-      </div>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Tour Info</th>
+          <th>Details</th>
+          <th>Booking Count</th>
+          <th>Actions</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+) : (
+  <div className="text-center py-10 text-lg font-medium text-gray-600">
+    No package updated yet.
+  </div>
+)}
+
+
+
 
       {selectedTour && (
         <EditModal

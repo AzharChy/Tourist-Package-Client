@@ -61,7 +61,9 @@ const Register = () => {
   })
   .then((res) => {
     console.log('User saved to DB:', res.data);
-    Swal.fire("Registration Successful!");
+    Swal.fire("Registration Successful!").then(() => {
+  setTimeout(() => navigate('/'), 2000); // small delay for auth state update
+});;
     navigate('/');
   })
   .catch((error) => {

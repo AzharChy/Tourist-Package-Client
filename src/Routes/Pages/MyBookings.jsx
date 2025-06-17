@@ -64,6 +64,8 @@ const MyBookings = () => {
     });
   };
 
+  
+
   const handleConfirm = async (bookingId) => {
   try {
     const res = await axios.patch(`http://localhost:3000/booking/${bookingId}/confirm`, {}, {
@@ -122,6 +124,7 @@ const MyBookings = () => {
                     <p><strong>Price:</strong> ৳{booking.price}</p>
                     <p><strong>Booking Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
                     <p><strong>Departure:</strong> {booking.departure} from {booking.location}</p>
+                    <p><strong>Destination: {booking.destination}</strong></p>
                     <p><strong>Guide:</strong> {booking.guideName} ({booking.contact})</p>
                     <p><strong>Note:</strong> {booking.note || 'None'}</p>
                   </td>
