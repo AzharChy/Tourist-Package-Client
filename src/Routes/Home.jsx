@@ -12,12 +12,10 @@ const Home = () => {
   return (
     <div className="bg-base-200">
       {/* Top bar with theme toggle */}
-      <div className="p-4">
-        <ThemeToggle />
-      </div>
+      
 
       {/* Banner Section */}
-     <div className="hero bg-blue-300 py-10 px-4">
+     <div className="hero bg-blue-300 py-10 px-4 mt-10">
   <div className="hero-content flex-col lg:flex-row gap-10">
     <img
       src={bannerImage}

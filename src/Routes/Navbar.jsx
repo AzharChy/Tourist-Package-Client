@@ -4,6 +4,7 @@ import { AuthContext } from './Pages/Authentication/AuthContext';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { GiDetour } from "react-icons/gi";
+import ThemeToggle from '../ThemeToggle/Themetoggle';
 
 const Navbar = () => {
   const { user, logout } = use(AuthContext);
@@ -51,6 +52,7 @@ const Navbar = () => {
      <li><NavLink to='myPackages'>My Packages</NavLink></li>
    )}
       <li><NavLink to='/aboutUs'>About Us</NavLink></li>
+      <li><ThemeToggle /></li>
     </>
   );
 
