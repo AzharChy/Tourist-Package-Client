@@ -110,7 +110,7 @@ const Navbar = () => {
     <div className="flex  items-center gap-4">
       {/* Logout Button */}
       <Link to="/login">
-        <button onClick={handleLogout} className="btn btn-secondary">
+        <button onClick={handleLogout} className="btn btn-primary">
           Logout
         </button>
       </Link>
