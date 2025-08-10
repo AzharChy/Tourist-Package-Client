@@ -6,6 +6,7 @@ import FeaturedPackages from './FeaturedPackages';
 import FlyAir from '../Homepage Component/FlyAir';
 import RaikTicket from '../Homepage Component/RaikTicket';
 import Marquee from "react-fast-marquee";
+import Newsletter from '../Homepage Component/Newsletter';
 
 const Home = () => {
   return (
@@ -51,6 +52,13 @@ const Home = () => {
         <div>
           <RaikTicket></RaikTicket>
         </div>
+
+        {/* newsletter section */}
+
+       <div>
+        <Newsletter />
+       </div>
+
         <div>
            <Marquee gradient={false} speed={50} pauseOnHover={true}>
         <span className="text-blue-700 font-medium text-lg">
