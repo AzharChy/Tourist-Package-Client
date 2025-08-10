@@ -26,7 +26,7 @@ const FeaturedPackages = () => {
         {packages.map((pkg) => (
           <div
             key={pkg._id}
-            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+            className="bg-blue-300 rounded-lg shadow-md overflow-hidden flex flex-col"
           >
             <img
               src={pkg.image}
